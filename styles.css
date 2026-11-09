@@ -180,10 +180,7 @@ p code, li code, td code { font-size: .78em; background: var(--chip); padding: .
 .review-title { font-weight: 700; font-size: 17px; }
 .review-title::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 12px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); transition: transform .15s; vertical-align: 2px; }
 .review[open] .review-title::before { transform: rotate(45deg); vertical-align: 4px; }
-.review-count { display: flex; gap: 6px; flex-wrap: wrap; }
-.chip { font-size: 15px; font-weight: 500; padding: 4px 11px; border-radius: 999px; background: var(--chip); color: var(--ink); }
-.chip.risk { background: var(--amber-soft); color: var(--amber); }
-.chip.claim { background: var(--cobalt-soft); color: var(--cobalt); }
+.review-count { font-size: 15px; color: var(--ink-2); }
 .review > summary:hover .review-title { text-decoration: underline; text-underline-offset: 4px; }
 .review.ready { border-color: var(--amber-mark); box-shadow: 0 0 0 1px var(--amber-mark); }
 .review-body { padding: 0 20px 22px; border-top: 1px solid var(--rule); }

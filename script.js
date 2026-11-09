@@ -61,14 +61,14 @@
     {
       id: 'sha256:884ec559ec2e',
       note: 'First proposal for this workflow.',
-      count: [['4 edits'], ['2 files'], ['no commands']],
+      count: '4 edits to 2 files, no commands',
       summary: 'Apply the existing login-specific fixed-window limiter to CSRF-valid login requests before parsing credentials or performing authentication, and verify that the endpoint rejects requests beyond the configured per-IP limit.',
       intents: [...EDITS, ['report', 'Summary for the reviewer']],
     },
     {
       id: 'sha256:3b7f0e91d2a6',
       note: 'Revision 1. Replaces sha256:884ec559ec2e, which is now stale.',
-      count: [['4 edits'], ['2 files'], ['1 command', 'risk'], ['1 claim', 'claim']],
+      count: '4 edits to 2 files, 1 command, 1 claim',
       summary: 'Same edits. Now also runs the test suite and claims it passes, so Current checks the result when applying.',
       intents: [...EDITS, ['run_command', 'npm test', true], ['claim', 'npm test exits 0', true], ['report', 'Summary for the reviewer']],
     },
@@ -77,12 +77,6 @@
   const EFFECT = { edit_file: 'EditFile', run_command: 'RunCommand', claim: 'Claim', report: 'Report' };
 
   let run = 0, head = null, index = 0, rev = 0;
-
-  // Open the changes automatically on wide screens when a proposal is waiting for a decision.
-  // Once the visitor opens or closes the panel themselves, their choice wins.
-  const wide = window.matchMedia('(min-width: 981px)');
-  let reviewPref = null; // null | 'open' | 'closed'
-  review.querySelector('summary').addEventListener('click', () => { reviewPref = review.open ? 'closed' : 'open'; });
 
   // SHA-256 via Web Crypto. There is deliberately no non-cryptographic fallback:
   // without Web Crypto the blocks say so instead of showing a hash.
@@ -145,7 +139,7 @@
     revnote.textContent = p.note;
     intentsEl.innerHTML = p.intents.map(([k, v, added]) =>
       `<li${added ? ' class="added"' : ''}><span class="k">${k}</span> ${esc(v)}</li>`).join('');
-    reviewCount.innerHTML = p.count.map(([t, k]) => `<span class="chip${k ? ' ' + k : ''}">${esc(t)}</span>`).join('');
+    reviewCount.textContent = p.count;
     rev1Changes.forEach((el) => { el.hidden = rev === 0; });
     review.hidden = false;
   }
@@ -175,10 +169,9 @@
     line('<span class="w">Waiting for approval. Nothing has been applied.</span>\n');
     setState('waiting_for_approval', 'waiting');
     review.classList.add('ready');
-    review.open = reviewPref ? reviewPref === 'open' : wide.matches;
     hint.textContent = rev
-      ? 'A new proposal needs its own review. Its changes are below.'
-      : 'Review the proposed changes below. Note that nothing runs the tests.';
+      ? 'A new proposal needs its own review. Open the changes below.'
+      : 'Open the proposed changes below. Nothing here runs the tests.';
     show('approve', 'revise', 'reject');
     btn.approve.disabled = false; btn.reject.disabled = false; btn.revise.disabled = rev > 0;
     pulse(btn.approve);
