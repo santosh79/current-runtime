@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#EEF0EC">
+  <title>Current: change control for AI agents</title>
+  <meta name="description" content="Agents propose changes. Current validates them, waits for your approval, applies them, and records every step in a tamper-evident log.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Current: change control for AI agents">
+  <meta property="og:description" content="Agents propose. Nothing happens until you approve. An open-source runtime, built in Elixir.">
+  <meta name="twitter:card" content="summary">
+  <!-- Once the domain is live, add: <link rel="canonical" href="https://YOUR-DOMAIN/"> and <meta property="og:url" content="https://YOUR-DOMAIN/"> -->
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./script.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="wrap site-header">
+  <a class="brand" href="#main" aria-label="Current home">
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+      <rect x="1" y="1" width="24" height="24" rx="6" fill="none" stroke="#14202B" stroke-width="2"/>
+      <path d="M6 15c2.2 0 2.2-4 4.4-4s2.2 4 4.4 4 2.2-4 4.4-4" fill="none" stroke="#2340C8" stroke-width="2.2" stroke-linecap="round"/>
+    </svg>
+    current
+  </a>
+  <nav aria-label="Main navigation">
+    <a href="#how">How it works</a>
+    <a href="#record">The record</a>
+    <a href="#security">Security</a>
+    <a href="#quickstart">Quickstart</a>
+  </nav>
+  <a class="btn small" href="https://github.com/santosh79/current">GitHub</a>
+</header>
+
+<main id="main">
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <h1 id="hero-title">Agents propose. <span class="gate">Nothing happens until you approve.</span></h1>
+    <p class="lede">Current is change control for AI agents. The agent hands over a complete proposal. Current validates it, waits for your decision, applies it, and records every step in a hash-chained log.</p>
+    <div class="ctas">
+      <a class="btn primary" href="#quickstart">Get started</a>
+      <a class="btn" href="https://github.com/santosh79/current">View the source</a>
+    </div>
+
+    <div class="demo" id="demo" aria-label="Interactive walkthrough of one Current workflow">
+      <div class="term">
+        <div class="term-bar">
+          <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>examples/nextjs-auth</span>
+          <span class="term-note">A real proposal, replayed in your browser</span>
+        </div>
+        <!-- Static transcript, shown when JavaScript is off. script.js replaces it with the live walkthrough. -->
+        <div class="term-body" id="term" tabindex="0" aria-label="Terminal output"><span class="p">$ </span><span class="c">current run "add rate limiting to the login endpoint" \
+    --dir examples/nextjs-auth --model "$MODEL"</span>
+
+<span class="d">… round 1: the model asked to see 4 things</span>
+    <span class="ok">✓</span> read_file app/api/login/route.ts
+    <span class="ok">✓</span> read_file lib/rate-limit.ts
+    <span class="d">…</span>
+
+<span class="b">Agent produced proposal</span>
+  proposal <span class="h">sha256:884ec559ec2e…</span>
+
+<span class="ok">✓</span> Proposal decoded
+<span class="ok">✓</span> Proposal validated
+
+<span class="w">Waiting for approval. Nothing has been applied.</span></div>
+        <div class="term-actions" id="actions" hidden>
+          <p class="hint" id="hint" role="status">The agent is reading the project…</p>
+          <div class="action-buttons">
+            <button type="button" class="tbtn go" id="approve" disabled>Approve</button>
+            <button type="button" class="tbtn" id="revise" disabled>Send back</button>
+            <button type="button" class="tbtn" id="reject" disabled>Reject</button>
+            <button type="button" class="tbtn go" id="apply" hidden>Apply</button>
+            <button type="button" class="tbtn" id="replay" hidden>Run again</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="side">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Proposal</h2>
+            <span class="state waiting" id="state">waiting_for_approval</span>
+          </div>
+          <p class="pid" id="pid">sha256:884ec559ec2e</p>
+          <p class="sub" id="revnote">First proposal for this workflow.</p>
+          <ol class="intent-list" id="intents">
+            <li><span class="k">edit_file</span> app/api/login/route.ts</li>
+            <li><span class="k">edit_file</span> app/api/login/route.ts</li>
+            <li><span class="k">edit_file</span> tests/rate-limit.test.ts</li>
+            <li><span class="k">edit_file</span> tests/rate-limit.test.ts</li>
+            <li><span class="k">report</span> Summary for the reviewer</li>
+          </ol>
+        </div>
+        <div class="panel">
+          <h2>Your project</h2>
+          <p class="sub" id="projnote">Untouched. The agent can only read what it asks for.</p>
+          <ul class="files" id="files">
+            <li data-path="app/api/login/route.ts"><span>app/api/login/route.ts</span><span>unchanged</span></li>
+            <li data-path="tests/rate-limit.test.ts"><span>tests/rate-limit.test.ts</span><span>unchanged</span></li>
+            <li><span>lib/rate-limit.ts</span><span>unchanged</span></li>
+            <li><span>lib/csrf.ts</span><span>unchanged</span></li>
+            <li><span>lib/logger.ts</span><span>unchanged</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <details class="review" id="review">
+      <summary>
+        <span class="review-title">View proposed changes</span>
+        <span class="review-count" id="review-count"><span class="chip">4 edits</span><span class="chip">2 files</span><span class="chip">no commands</span></span>
+      </summary>
+      <div class="review-body">
+        <p class="review-why"><strong>Why, according to the agent:</strong> Apply the existing login-specific fixed-window limiter to CSRF-valid login requests before parsing credentials or performing authentication, and verify that the endpoint rejects requests beyond the configured per-IP limit.</p>
+        <p class="review-note">Each <code>edit_file</code> replaces one exact piece of text, which must match the file exactly once. Shown here as a diff.</p>
+        <ol class="changes" id="changes">
+          <li class="change">
+            <div class="change-head"><span class="k">edit_file</span> <span class="path">app/api/login/route.ts</span> <span class="stat"><span class="plus">+4</span> <span class="minus">−0</span></span></div>
+            <pre class="diff" tabindex="0"><span class="ctx">  import { isCsrfRequestValid } from &quot;../../../../lib/csrf&quot;;</span><span class="add">+ import {</span><span class="add">+   getClientIp,</span><span class="add">+   loginRateLimiter</span><span class="add">+ } from &quot;../../../../lib/rate-limit&quot;;</span><span class="ctx">  import { logFailedLogin } from &quot;../../../../lib/logger&quot;;</span></pre>
+          </li>
+          <li class="change">
+            <div class="change-head"><span class="k">edit_file</span> <span class="path">app/api/login/route.ts</span> <span class="stat"><span class="plus">+14</span> <span class="minus">−0</span></span></div>
+            <pre class="diff" tabindex="0"><span class="ctx">    if (!isCsrfRequestValid(request)) {</span><span class="ctx">      return Response.json(</span><span class="ctx">        { error: &quot;Invalid CSRF origin&quot; },</span><span class="ctx">        { status: 403 }</span><span class="ctx">      );</span><span class="ctx">    }</span><span class="ctx">  </span><span class="add">+   const rateLimit = loginRateLimiter.consume(getClientIp(request));</span><span class="add">+ </span><span class="add">+   if (!rateLimit.allowed) {</span><span class="add">+     return Response.json(</span><span class="add">+       { error: &quot;Too many login attempts&quot; },</span><span class="add">+       {</span><span class="add">+         status: 429,</span><span class="add">+         headers: {</span><span class="add">+           &quot;Retry-After&quot;: String(rateLimit.retryAfterSeconds)</span><span class="add">+         }</span><span class="add">+       }</span><span class="add">+     );</span><span class="add">+   }</span><span class="add">+ </span><span class="ctx">    const { username, password } = await request.json();</span></pre>
+          </li>
+          <li class="change">
+            <div class="change-head"><span class="k">edit_file</span> <span class="path">tests/rate-limit.test.ts</span> <span class="stat"><span class="plus">+6</span> <span class="minus">−1</span></span></div>
+            <pre class="diff" tabindex="0"><span class="del">- import { RateLimiter, getClientIp } from &quot;../lib/rate-limit&quot;;</span><span class="add">+ import {</span><span class="add">+   LOGIN_RATE_LIMIT,</span><span class="add">+   LOGIN_RATE_LIMIT_WINDOW_MS,</span><span class="add">+   RateLimiter,</span><span class="add">+   getClientIp</span><span class="add">+ } from &quot;../lib/rate-limit&quot;;</span></pre>
+          </li>
+          <li class="change">
+            <div class="change-head"><span class="k">edit_file</span> <span class="path">tests/rate-limit.test.ts</span> <span class="stat"><span class="plus">+5</span> <span class="minus">−0</span></span></div>
+            <pre class="diff" tabindex="0"><span class="ctx">  describe(&quot;RateLimiter&quot;, () =&gt; {</span><span class="add">+   it(&quot;configures login attempts for a ten-attempt, fifteen-minute window&quot;, () =&gt; {</span><span class="add">+     expect(LOGIN_RATE_LIMIT).toBe(10);</span><span class="add">+     expect(LOGIN_RATE_LIMIT_WINDOW_MS).toBe(15 * 60 * 1000);</span><span class="add">+   });</span><span class="add">+ </span><span class="ctx">    it(&quot;allows requests up to the limit and blocks the next one&quot;, () =&gt; {</span></pre>
+          </li>
+          <li class="change rev1" hidden>
+            <div class="change-head"><span class="k">run_command</span> <span class="path">npm test</span></div>
+            <p class="change-note">Runs in the project with the runtime's privileges. Allowed only because <code>npm</code> is on the command allowlist.</p>
+          </li>
+          <li class="change rev1" hidden>
+            <div class="change-head"><span class="k">claim</span> <span class="path">The test suite passes</span></div>
+            <p class="change-note">Checked by Current when applied: <code>npm test</code> must exit with code 0, or the workflow fails.</p>
+          </li>
+          <li class="change">
+            <div class="change-head"><span class="k">report</span> <span class="path">No effect</span></div>
+            <p class="change-note">“The login route will consume one rate-limit token per CSRF-valid request using the best-effort client IP. Requests after 10 attempts in 15 minutes will receive HTTP 429 with a Retry-After header before request-body parsing or authentication. Existing limiter tests will also pin the login-specific policy.”</p>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <div class="chain-wrap">
+      <div class="chain-head">
+        <h2>Commit log</h2>
+        <span class="headhash" id="headhash">Real SHA-256 hashes, computed in your browser for this demo.</span>
+      </div>
+      <div class="chain" id="chain" aria-label="Commit log for this workflow"></div>
+      <p class="chain-note">Current's own log hashes each commit's canonical encoding on disk. These blocks show the same chaining, not Current's actual bytes.</p>
+    </div>
+  </section>
+
+  <section class="s" id="why" aria-labelledby="why-title">
+    <div class="wrap">
+      <h2 id="why-title">Why not just use Claude Code or Codex?</h2>
+      <p class="intro">You can. The difference is where the action happens. In a typical agent, a tool call is the action: the file is written the moment the model decides to write it. In Current, the agent can't act at all.</p>
+      <div class="two">
+        <div class="compare them">
+          <h3>A typical coding agent</h3>
+          <p class="flow">model decides, file is written<br>model decides, command runs<br>you approve step by step, as it goes</p>
+          <p>Review happens around actions that are already underway.</p>
+        </div>
+        <div class="compare us">
+          <h3>Current</h3>
+          <p class="flow"><b>model</b> hands over typed intents<br><b>runtime</b> decodes and validates<br><b>you</b> approve, send back or reject<br><b>runtime</b> applies, verifies, records</p>
+          <p>A small trusted interpreter is the only thing that touches your project, and only after an approval is on the record.</p>
+        </div>
+      </div>
+      <div class="pillars">
+        <div>
+          <h3>A proposal, not a tool call.</h3>
+          <p>The agent sees only the files it asks for that the read policy allows, and can only propose from nine intent types. Approving and applying are separate steps. Only allowlisted commands run.</p>
+        </div>
+        <div>
+          <h3>Check the work. Not the word.</h3>
+          <p>Review the exact edits and commands, or pass the JSON review to another agent. Claims are checked against what actually ran, and a false claim fails the workflow.</p>
+        </div>
+        <div>
+          <h3>Every change has a history.</h3>
+          <p>When someone asks why a line changed and who approved it, the answer comes from a commit log, not from asking the model to explain itself.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s" id="how" aria-labelledby="how-title">
+    <div class="wrap">
+      <h2 id="how-title">Between the proposal and your project</h2>
+      <p class="intro">A proposal does nothing on its own. Five steps stand between it and your files, and each is recorded as an event.</p>
+      <ol class="steps">
+        <li><h3>Decode</h3><p>The model's reply is untrusted bytes. It becomes typed intents from a closed set, or it is rejected. Nothing is interpreted.</p></li>
+        <li><h3>Validate</h3><p>Paths stay inside the project, files exist, every edit matches exactly, every claim cites an earlier intent.</p></li>
+        <li class="gate"><h3>Decide</h3><p>A person or another agent approves, rejects, or sends it back with feedback. Each revision is a new proposal with its own ID. Ten revisions by default.</p></li>
+        <li><h3>Apply</h3><p>A separate command. The interpreter re-checks each path against the filesystem, following symlinks, just before touching it.</p></li>
+        <li><h3>Check</h3><p>Claims are evaluated against recorded results. The first failed effect or false claim stops the workflow. Effects are not rolled back.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="s" id="intents" aria-labelledby="intents-title">
+    <div class="wrap">
+      <h2 id="intents-title">Nine intents. Anything else is rejected.</h2>
+      <p class="intro">The agent speaks a closed vocabulary. Before proposing, it can look around with the three read-only intents: up to 20 per reply and 8 rounds, filtered by the read policy and recorded.</p>
+      <div class="table-scroll">
+      <table class="intents">
+        <thead><tr><th scope="col">Intent</th><th scope="col">What it does when applied</th><th scope="col">Usable before proposing</th></tr></thead>
+        <tbody>
+          <tr class="grp"><th colspan="3" scope="rowgroup">Look</th></tr>
+          <tr><td><code>read_file</code></td><td>Reads a file and stores its contents</td><td>Yes</td></tr>
+          <tr><td><code>glob</code></td><td>Lists files matching a relative pattern</td><td>Yes</td></tr>
+          <tr><td><code>grep</code></td><td>Finds lines containing a literal string in listed files</td><td>Yes</td></tr>
+          <tr class="grp"><th colspan="3" scope="rowgroup">Change</th></tr>
+          <tr><td><code>write_file</code></td><td>Creates a new file. Fails if it already exists</td><td>No</td></tr>
+          <tr><td><code>edit_file</code></td><td>Replaces exact text, byte for byte, and stores the file before and after</td><td>No</td></tr>
+          <tr><td><code>delete_file</code></td><td>Deletes a file, storing its contents first</td><td>No</td></tr>
+          <tr><td><code>run_command</code></td><td>Runs an allowlisted executable in the project, storing stdout, stderr and exit code</td><td>No</td></tr>
+          <tr class="grp"><th colspan="3" scope="rowgroup">Assert</th></tr>
+          <tr><td><code>claim</code></td><td>Checks a statement against an earlier intent's result, such as an exit code or match count</td><td>No</td></tr>
+          <tr><td><code>report</code></td><td>A summary for the reader. No effect</td><td>No</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="interfaces">
+        <h3>One runtime, three ways in</h3>
+        <p>The CLI, the HTTP API and the MCP tools all go through the same runtime and the same rules. Review as a person, from a script, or with another agent in the loop. Pick an OpenAI or Anthropic model per task.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="s" id="record" aria-labelledby="record-title">
+    <div class="wrap">
+      <h2 id="record-title">Every change traces back to a request</h2>
+      <p class="intro">The runtime is the only thing that acts, and it records each step before taking the next. Read the chain without the model, and check that nobody quietly edited it.</p>
+      <div class="prov">
+<pre class="tree" tabindex="0" aria-label="Event chain for one workflow"><span class="n">TaskCreated</span>                <span class="d">prompt, model, project</span>
+└─ <span class="n">WorkflowCreated</span>
+   └─ <span class="n">ProposalProduced</span>       <span class="d">intents, reads, raw reply</span>
+      └─ <span class="n">ProposalValidated</span>
+         ├─ <span class="n">ProposalRevisionRequested</span>
+         │  └─ <span class="d">… a new proposal, revision 1</span>
+         └─ <span class="a">ProposalApproved</span>     <span class="d">who, when, message</span>
+            └─ <span class="n">EffectApplicationStarted</span>
+               ├─ <span class="n">EffectApplied</span>  <span class="d">file before and after</span>
+               ├─ <span class="n">EffectApplied</span>  <span class="d">exit code, stdout</span>
+               ├─ <span class="n">EffectApplied</span>  <span class="d">claim verified</span>
+               └─ <span class="n">WorkflowCompleted</span></pre>
+        <dl class="qa">
+          <div><dt>Who asked for this, and what exactly did they ask?</dt><dd>The task: prompt, model and project directory.</dd></div>
+          <div><dt>What did the model look at before deciding?</dt><dd>Each read, its reason, and the exact bytes it was shown.</dd></div>
+          <div><dt>What did the model actually say?</dt><dd>Its raw reply, stored byte for byte.</dd></div>
+          <div><dt>Who authorized it, and what did reviewers ask to change?</dt><dd>The approval and any revision requests, with their messages.</dd></div>
+          <div><dt>Did it do what the agent claimed?</dt><dd>Each claim's verification and the result it was checked against.</dd></div>
+          <div><dt>What didn't happen, and why?</dt><dd>Rejections, validation failures and failed effects, each with a reason.</dd></div>
+        </dl>
+      </div>
+
+      <h3 class="sub-head">A history that checks its own links</h3>
+      <div class="chain-diagram" aria-hidden="true">
+        <div class="cd"><span class="k">index</span> 1<br><span class="k">previous</span> nil<br><span class="k">events</span> […]</div>
+        <div class="cd"><span class="k">index</span> 2<br><span class="k">previous</span> H(c1)<br><span class="k">events</span> […]</div>
+        <div class="cd head"><span class="tag">head</span><span class="k">index</span> 3<br><span class="k">previous</span> H(c2)<br><span class="k">events</span> […]</div>
+      </div>
+      <div class="facts">
+        <div><h4>The head hash fingerprints everything</h4><p>Change any byte of any past commit and every link after it breaks. File contents, command output and model replies are covered too, by their SHA-256 ids.</p></div>
+        <div><h4>Verified on every start</h4><p>A gap, a broken link or corrupt bytes stop the runtime, naming the file. Commits are fsynced before anyone hears of them.</p></div>
+        <div><h4>Rules enforced at commit time</h4><p>One pure reducer decides every transition. No apply without approval, no decision on a stale proposal, and of two racing approvals only one is accepted.</p></div>
+        <div><h4>Replay anywhere</h4><p>The log and the artifact store are the whole state. Copy the data directory to another machine and the same history rebuilds.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s" id="security" aria-labelledby="security-title">
+    <div class="wrap">
+      <h2 id="security-title">Control isn't a sandbox.</h2>
+      <p class="intro">Current controls when an agent's proposal takes effect and records everything about it. It does not limit what an approved proposal can do. It is early software: single node, local projects.</p>
+      <div class="honest">
+        <h3>Read this before you approve a command</h3>
+        <ul>
+          <li><strong>Approved commands keep your privileges.</strong> Commands are denied unless allowlisted. Once allowed, they inherit the runtime's environment, files and network, and their arguments are unrestricted. Approving <code>npm test</code> approves running arbitrary code.</li>
+          <li><strong>Local first, not authenticated.</strong> The HTTP API and MCP endpoint have no authentication. Anyone who can reach them can approve and apply, so keep them on loopback or behind a gateway.</li>
+          <li><strong>Tamper-evident, not signed.</strong> Someone who can write the data directory can rewrite history and recompute every hash. Signed or externally published heads are planned.</li>
+          <li><strong>The read policy filters by name.</strong> Dependencies, build output, <code>.git</code> and <code>.env*</code> are never shown to the model. A key in another file can be.</li>
+        </ul>
+      </div>
+      <div class="status">
+        <div class="have">
+          <h3>Works today</h3>
+          <ul>
+            <li>Request, review, revise, approve, reject and apply from the CLI, HTTP or MCP</li>
+            <li>Claims verified against results</li>
+            <li>Hash-chained, segmented log, verified on every start</li>
+            <li>Content-addressed artifacts for every input and output</li>
+            <li>OpenAI and Anthropic models, chosen per task</li>
+            <li>Default-deny command allowlist</li>
+          </ul>
+        </div>
+        <div class="next">
+          <h3>Planned</h3>
+          <ul>
+            <li><code>current export</code> and <code>current replay</code>: re-run elsewhere and diff</li>
+            <li><code>current verify</code>: check the chain and every artifact</li>
+            <li>Signed or externally anchored log heads</li>
+            <li>Approval policies and authenticated approvers</li>
+            <li>Command timeout, output cap and environment filtering</li>
+            <li>Atomic apply, and sandboxed commands</li>
+          </ul>
+        </div>
+      </div>
+      <p class="more"><a href="https://github.com/santosh79/current/blob/main/docs/threat_model.md">Read the threat model</a></p>
+    </div>
+  </section>
+
+  <section class="s" id="quickstart" aria-labelledby="quickstart-title">
+    <div class="wrap">
+      <h2 id="quickstart-title">Make your first proposal</h2>
+      <p class="intro">You need Elixir 1.19 on Erlang/OTP, <code>git</code>, <code>make</code> and <code>bash</code>, and an OpenAI or Anthropic API key. The <a href="https://github.com/santosh79/current#quickstart">full setup guide</a> has the details.</p>
+      <div class="setup">
+        <div class="setup-step">
+          <h3>Build Current</h3>
+<pre class="code" data-copy tabindex="0"><code>git clone https://github.com/santosh79/current.git
+cd current
+mix deps.get
+mix compile
+make client</code></pre>
+        </div>
+        <div class="setup-step">
+          <h3>Start the runtime</h3>
+<pre class="code" data-copy tabindex="0"><code># in the repository root
+export ANTHROPIC_API_KEY="your-key"
+# commands are denied unless allowlisted
+export CURRENT_ALLOWED_COMMANDS=npm
+bin/current-server</code></pre>
+        </div>
+        <div class="setup-step">
+          <h3>Ask for a proposal</h3>
+<pre class="code" data-copy tabindex="0"><code># another terminal, repository root
+export PATH="$PWD:$PATH"
+current models
+# use an ID from the list above
+MODEL="anthropic:model-id-from-the-list"
+current run "add CSRF protection to this app" \
+  --dir examples/nextjs-auth --model "$MODEL"</code></pre>
+        </div>
+        <div class="setup-step">
+          <h3>Review, decide, apply</h3>
+<pre class="code" data-copy tabindex="0"><code>current review  &lt;proposal-id&gt;
+current revise  &lt;proposal-id&gt; -m "add edge cases"
+current approve &lt;proposal-id&gt; -m "reviewed"
+current apply   &lt;proposal-id&gt;
+current events  &lt;workflow-id&gt;</code></pre>
+        </div>
+      </div>
+      <p class="note">Want a proposal that can never be applied? Use <code>current plan</code> instead of <code>current run</code>.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap row">
+    <p>Current is an independent open-source project, MIT licensed.</p>
+    <nav aria-label="Footer navigation">
+      <a href="https://github.com/santosh79/current">GitHub</a>
+      <a href="https://github.com/santosh79/current#readme">Documentation</a>
+      <a href="https://github.com/santosh79/current/blob/main/docs/threat_model.md">Threat model</a>
+      <a href="https://github.com/santosh79/current#roadmap">Roadmap</a>
+      <a href="https://github.com/santosh79/current/blob/main/LICENSE">License</a>
+    </nav>
+  </div>
+</footer>
+<div id="copy-status" class="sr-only" role="status" aria-live="polite"></div>
+</body>
+</html>
