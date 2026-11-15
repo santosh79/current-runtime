@@ -5,10 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#EEF0EC">
   <title>Current: A proposal-centric runtime for Agentic workflows</title>
-  <meta name="description" content="Agents propose changes. Current validates them, waits for your approval, applies them, and records every step in a tamper-evident log.">
+  <meta name="description" content="Agents propose. The runtime acts. A proposal-centric runtime for agentic workflows with review, provenance, and verification." />
+
+<meta property="og:image" content="https://current-runtime.dev/current_og_image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Current — Agents propose. The runtime acts." />
+
+<meta name="twitter:image" content="https://current-runtime.dev/current_og_image.png" />
+<meta name="twitter:image:alt" content="Current — Agents propose. The runtime acts." />
+
+<link rel="canonical" href="https://current-runtime.dev/" />
+<meta name="theme-color" content="#f3f2ef" />
+
   <meta property="og:type" content="website">
   <meta property="og:title" content="Current: A proposal-centric runtime for Agentic workflows">
-  <meta property="og:description" content="Agents propose. Nothing happens until you approve. An open-source runtime, built in Elixir.">
+  <meta property="og:description" content="Agents propose. The runtime acts. A proposal-centric runtime for agentic workflows with review, provenance, and verification.">
   <meta name="twitter:card" content="summary">
   <link rel="canonical" href="https://current-runtime.dev/">
   <meta property="og:url" content="https://current-runtime.dev/"> 
@@ -38,8 +50,8 @@
 
 <main id="main">
   <section class="hero wrap" aria-labelledby="hero-title">
-    <h1 id="hero-title">Agents propose. <span class="gate">Nothing happens until you approve.</span></h1>
-    <p class="lede">Current is a proposal-centric runtime for Agentic workflows. The agent hands over a complete proposal. Current validates it, waits for your decision, applies it, and records every step in a hash-chained log.</p>
+    <h1 id="hero-title">Agents propose. <span class="gate">The runtime acts</span></h1>
+    <p class="lede">Current is a proposal-centric runtime for agentic workflows. The agent hands over a complete proposal. Current validates the proposal, coordinates review and approval, and controls application and verification. Every step along the way lands in a hash-chained log.</p>
     <div class="ctas">
       <a class="btn primary" href="#quickstart">Get started</a>
       <a class="btn" href="https://github.com/santosh79/current">View the source</a>
@@ -168,12 +180,12 @@
       <div class="two">
         <div class="compare them">
           <h3>A typical coding agent</h3>
-          <p class="flow">model decides, file is written<br>model decides, command runs<br>you approve step by step, as it goes</p>
+          <p class="flow">model decides, file is written<br>model decides, command runs<br>approval is needed step by step, as it goes</p>
           <p>Review happens around actions that are already underway.</p>
         </div>
         <div class="compare us">
           <h3>Current</h3>
-          <p class="flow"><b>model</b> hands over typed intents<br><b>runtime</b> decodes and validates<br><b>you</b> approve, send back or reject<br><b>runtime</b> applies, verifies, records</p>
+          <p class="flow"><b>model</b> hands over typed intents<br><b>runtime</b> decodes and validates<br>human or agent reviews, revises or approves<br><b>runtime</b> applies, verifies, records</p>
           <p>A small trusted interpreter is the only thing that touches your project, and only after an approval is on the record.</p>
         </div>
       </div>
@@ -285,7 +297,7 @@
       <h2 id="security-title">Control isn't a sandbox.</h2>
       <p class="intro">Current controls when an agent's proposal takes effect and records everything about it. It does not limit what an approved proposal can do. It is early software: single node, local projects.</p>
       <div class="honest">
-        <h3>Read this before you approve a command</h3>
+        <h3>Read this before command apporval</h3>
         <ul>
           <li><strong>Approved commands keep your privileges.</strong> Commands are denied unless allowlisted. Once allowed, they inherit the runtime's environment, files and network, and their arguments are unrestricted. Approving <code>npm test</code> approves running arbitrary code.</li>
           <li><strong>Local first, not authenticated.</strong> The HTTP API and MCP endpoint have no authentication. Anyone who can reach them can approve and apply, so keep them on loopback or behind a gateway.</li>
